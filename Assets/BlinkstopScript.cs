@@ -572,6 +572,7 @@ public class BlinkstopScript : MonoBehaviour {
     private IEnumerator striker()
     {
         struck = true;
+        numSequence = "";
         statuslightstrike.SetActive(true);
         yield return new WaitForSeconds(1.0f);
         statuslightstrike.SetActive(false);
@@ -593,14 +594,14 @@ public class BlinkstopScript : MonoBehaviour {
         return true;
     }
 
-#pragma warning disable 414
+    #pragma warning disable 414
     //private readonly string TwitchHelpMessage = @"!{0} submit <nums> [Submits the specified number sequence] | !{0} reset [Waits for a long pause and then presses the blank button] | !{0} colorblind [Toggles colorblind mode] | Valid numbers are 1-3";
-    private readonly string TwitchHelpMessage = @"!{0} submit <nums> [Submits the specified number sequence] | !{0} reset [Waits for a long pause and then presses the blank button] | Valid numbers are 1-3";
-#pragma warning restore 414
+    private readonly string TwitchHelpMessage = @"!{0} submit <nums> [Submits the specified number sequence] | Valid numbers are 1-3";
+    #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string command)
     {
-        /**
+        /**Colorblind support is all commented out until wanted
         if (Regex.IsMatch(command, @"^\s*colorblind\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
@@ -621,7 +622,8 @@ public class BlinkstopScript : MonoBehaviour {
             yield return "sendtochaterror You may not press any buttons while the first sequence is flashing (to avoid bugs)!";
             yield break;
         }
-        if (Regex.IsMatch(command, @"^\s*reset\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        /**Old code used to clear the inputs via tp since it did not clear automatically on strike before. New line of code to fix this is numSequence = ""; in the striker method
+         * if (Regex.IsMatch(command, @"^\s*reset\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
             while(pausephase != true)
@@ -631,7 +633,7 @@ public class BlinkstopScript : MonoBehaviour {
             }
             buttons[3].OnInteract();
             yield break;
-        }
+        }*/
         string[] parameters = command.Split(' ');
         if (Regex.IsMatch(parameters[0], @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
