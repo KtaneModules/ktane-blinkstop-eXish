@@ -372,6 +372,7 @@ GameObject:
   - component: {fileID: 114235369766892872}
   - component: {fileID: 114137747078870040}
   - component: {fileID: 114017367703905494}
+  - component: {fileID: 114600659271183084}
   m_Layer: 0
   m_Name: Blinkstop
   m_TagString: Untagged
@@ -957,8 +958,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1782289713306642}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.44, z: 0}
-  m_LocalScale: {x: 1.1, y: 0.5, z: 1.1}
+  m_LocalPosition: {x: 0, y: 0.36, z: 0}
+  m_LocalScale: {x: 1.1, y: 0.4, z: 1.1}
   m_Children: []
   m_Father: {fileID: 4067865732069580}
   m_RootOrder: 1
@@ -1130,8 +1131,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1068790367076134}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.44, z: 0}
-  m_LocalScale: {x: 1.1, y: 0.5, z: 1.1}
+  m_LocalPosition: {x: 0, y: 0.36, z: 0}
+  m_LocalScale: {x: 1.1, y: 0.4, z: 1.1}
   m_Children: []
   m_Father: {fileID: 4635471420022290}
   m_RootOrder: 1
@@ -1402,8 +1403,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1423178124673748}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.44, z: 0}
-  m_LocalScale: {x: 1.1, y: 0.5, z: 1.1}
+  m_LocalPosition: {x: 0, y: 0.36, z: 0}
+  m_LocalScale: {x: 1.1, y: 0.4, z: 1.1}
   m_Children: []
   m_Father: {fileID: 4110374331005858}
   m_RootOrder: 1
@@ -1415,8 +1416,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1835669817987098}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.44, z: 0}
-  m_LocalScale: {x: 1.1, y: 0.5, z: 1.1}
+  m_LocalPosition: {x: 0, y: 0.36, z: 0}
+  m_LocalScale: {x: 1.1, y: 0.4, z: 1.1}
   m_Children: []
   m_Father: {fileID: 4762865668723230}
   m_RootOrder: 1
@@ -3163,6 +3164,8 @@ MonoBehaviour:
   - {fileID: 114666407200268032}
   - {fileID: 114331061217148580}
   - {fileID: 114677623819937324}
+  Colorblind: {fileID: 114600659271183084}
+  cblindtext: {fileID: 1663777289835912}
   statuslightoff: {fileID: 1355350162314858}
   statuslighton: {fileID: 1434055428526596}
   statuslightstrike: {fileID: 1579173773632658}
@@ -3501,6 +3504,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - Standard
+--- !u!114 &114600659271183084
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1371807027823920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1cfb889a07d5fd4e9baed7960bb397f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _colorblindMode: 0
 --- !u!114 &114666407200268032
 MonoBehaviour:
   m_ObjectHideFlags: 1

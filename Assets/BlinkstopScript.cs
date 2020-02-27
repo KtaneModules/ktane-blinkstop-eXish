@@ -11,9 +11,9 @@ public class BlinkstopScript : MonoBehaviour {
     public KMAudio audio;
     public KMBombInfo bomb;
     public KMSelectable[] buttons;
-    //public KMColorblindMode Colorblind;
-    //private bool colorblindActive = false;
-    //public GameObject cblindtext;
+    public KMColorblindMode Colorblind;
+    private bool colorblindActive = false;
+    public GameObject cblindtext;
 
     public GameObject statuslightoff;
     public GameObject statuslighton;
@@ -54,12 +54,12 @@ public class BlinkstopScript : MonoBehaviour {
     {
         moduleId = moduleIdCounter++;
         moduleSolved = false;
-        //colorblindActive = Colorblind.ColorblindModeActive;
+        colorblindActive = Colorblind.ColorblindModeActive;
+        Debug.LogFormat("[Blinkstop #{0}] Colorblind mode: {1}", moduleId, colorblindActive);
         foreach (KMSelectable obj in buttons){
             KMSelectable pressed = obj;
             pressed.OnInteract += delegate () { PressButton(pressed); return false; };
         }
-        //cblindtext.GetComponent<TextMesh>().text = "";
         GetComponent<KMBombModule>().OnActivate = OnActivate;
         Debug.LogFormat("[Blinkstop #{0}] Due to the constantly changing sequences, this module will not log any information about solutions until a submission is made", moduleId);
     }
@@ -73,7 +73,6 @@ public class BlinkstopScript : MonoBehaviour {
     {
         ledcycling = StartCoroutine(cycleLEDColors());
         rainbowcycling = StartCoroutine(cycleRainbowLED());
-        //Debug.LogFormat("[Codenames #{0}] Colorblind mode: {1}", moduleId, colorblindActive);
     }
 
     void PressButton(KMSelectable pressed)
@@ -461,34 +460,34 @@ public class BlinkstopScript : MonoBehaviour {
                 if (ledcols[i].Equals('P'))
                 {
                     statuslightp.SetActive(true);
-                    /**if (colorblindActive)
+                    if (colorblindActive)
                     {
                         cblindtext.GetComponent<TextMesh>().text = "P";
-                    }*/
+                    }
                 }
                 else if (ledcols[i].Equals('C'))
                 {
                     statuslightc.SetActive(true);
-                    /**if (colorblindActive)
+                    if (colorblindActive)
                     {
                         cblindtext.GetComponent<TextMesh>().text = "C";
-                    }*/
+                    }
                 }
                 else if (ledcols[i].Equals('Y'))
                 {
                     statuslighty.SetActive(true);
-                    /**if (colorblindActive)
+                    if (colorblindActive)
                     {
                         cblindtext.GetComponent<TextMesh>().text = "Y";
-                    }*/
+                    }
                 }
                 else if (ledcols[i].Equals('M'))
                 {
                     statuslightm.SetActive(true);
-                    /**if (colorblindActive)
+                    if (colorblindActive)
                     {
                         cblindtext.GetComponent<TextMesh>().text = "M";
-                    }*/
+                    }
                 }
             }
             yield return new WaitForSeconds(0.6f);
@@ -510,10 +509,10 @@ public class BlinkstopScript : MonoBehaviour {
                 {
                     statuslightm.SetActive(false);
                 }
-                /**if (colorblindActive)
+                if (colorblindActive)
                 {
                     cblindtext.GetComponent<TextMesh>().text = "";
-                }*/
+                }
                 statuslightoff.SetActive(true);
             }
             yield return new WaitForSeconds(0.25f);
@@ -596,12 +595,11 @@ public class BlinkstopScript : MonoBehaviour {
 
     #pragma warning disable 414
     //private readonly string TwitchHelpMessage = @"!{0} submit <nums> [Submits the specified number sequence] | !{0} reset [Waits for a long pause and then presses the blank button] | !{0} colorblind [Toggles colorblind mode] | Valid numbers are 1-3";
-    private readonly string TwitchHelpMessage = @"!{0} submit <nums> [Submits the specified number sequence] | Valid numbers are 1-3";
+    private readonly string TwitchHelpMessage = @"!{0} submit <nums> [Submits the specified number sequence] | !{0} colorblind [Toggles colorblind mode] | Valid numbers are 1-3";
     #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string command)
     {
-        /**Colorblind support is all commented out until wanted
         if (Regex.IsMatch(command, @"^\s*colorblind\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
             yield return null;
@@ -615,11 +613,6 @@ public class BlinkstopScript : MonoBehaviour {
             {
                 colorblindActive = true;
             }
-            yield break;
-        }*/
-        if (startingphase)
-        {
-            yield return "sendtochaterror You may not press any buttons while the first sequence is flashing (to avoid bugs)!";
             yield break;
         }
         /**Old code used to clear the inputs via tp since it did not clear automatically on strike before. New line of code to fix this is numSequence = ""; in the striker method
@@ -651,16 +644,24 @@ public class BlinkstopScript : MonoBehaviour {
                 if (paramsValid(seq))
                 {
                     yield return null;
-                    if (!seq.Equals(correctNumSequence))
+                    if (startingphase)
                     {
-                        yield return "strike";
+                        yield return "sendtochaterror You may not press any buttons while the first sequence is flashing (to avoid bugs)!";
+                        yield break;
                     }
-                    else if (seq.Equals(correctNumSequence))
+                    if (pausephase)
                     {
-                        yield return "solve";
+                        yield return "sendtochaterror You may not press any buttons while the status light is paused! Ignoring submission.";
+                        yield break;
                     }
-                    for(int i = 0; i < seq.Length; i++)
+                    for (int i = 0; i < seq.Length; i++)
                     {
+                        if (pausephase)
+                        {
+                            yield return "sendtochaterror The status light has paused in the middle of input! Submission cancelled.";
+                            buttons[3].OnInteract();
+                            yield break;
+                        }
                         if (seq.ElementAt(i).Equals('3'))
                         {
                             buttons[0].OnInteract();
@@ -686,8 +687,35 @@ public class BlinkstopScript : MonoBehaviour {
     {
         while (pausephase || startingphase)
         {
+            yield return true;
             yield return new WaitForSeconds(0.1f);
         }
-        yield return ProcessTwitchCommand("submit " + correctNumSequence);
+        for (int i = 0; i < correctNumSequence.Length; i++)
+        {
+            if (pausephase)
+            {
+                buttons[3].OnInteract();
+                while (pausephase)
+                {
+                    yield return true;
+                    yield return new WaitForSeconds(0.1f);
+                }
+                i = 0;
+            }
+            if (correctNumSequence.ElementAt(i).Equals('3'))
+            {
+                buttons[0].OnInteract();
+            }
+            else if (correctNumSequence.ElementAt(i).Equals('2'))
+            {
+                buttons[1].OnInteract();
+            }
+            else if (correctNumSequence.ElementAt(i).Equals('1'))
+            {
+                buttons[2].OnInteract();
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+        buttons[3].OnInteract();
     }
 }
