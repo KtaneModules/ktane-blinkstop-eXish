@@ -119,6 +119,7 @@ public class BlinkstopScript : MonoBehaviour {
                         moduleSolved = true;
                         StopCoroutine(ledcycling);
                         StopCoroutine(rainbowcycling);
+                        cblindtext.GetComponent<TextMesh>().text = "G";
                         statuslightp.SetActive(false);
                         statuslightc.SetActive(false);
                         statuslighty.SetActive(false);
