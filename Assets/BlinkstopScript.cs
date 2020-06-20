@@ -119,7 +119,8 @@ public class BlinkstopScript : MonoBehaviour {
                         moduleSolved = true;
                         StopCoroutine(ledcycling);
                         StopCoroutine(rainbowcycling);
-                        cblindtext.GetComponent<TextMesh>().text = "G";
+                        if (colorblindActive)
+                            cblindtext.GetComponent<TextMesh>().text = "G";
                         statuslightp.SetActive(false);
                         statuslightc.SetActive(false);
                         statuslighty.SetActive(false);
@@ -574,9 +575,13 @@ public class BlinkstopScript : MonoBehaviour {
         struck = true;
         numSequence = "";
         statuslightstrike.SetActive(true);
+        if (colorblindActive)
+            cblindtext.GetComponent<TextMesh>().text = "R";
         yield return new WaitForSeconds(1.0f);
         statuslightstrike.SetActive(false);
         statuslightoff.SetActive(true);
+        if (colorblindActive)
+            cblindtext.GetComponent<TextMesh>().text = "";
         struck = false;
     }
 
