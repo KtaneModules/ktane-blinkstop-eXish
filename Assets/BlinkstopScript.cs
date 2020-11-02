@@ -1,10 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using KModkit;
 using System.Text.RegularExpressions;
-using System;
 
 public class BlinkstopScript : MonoBehaviour {
 
@@ -77,14 +74,14 @@ public class BlinkstopScript : MonoBehaviour {
 
     void PressButton(KMSelectable pressed)
     {
-        if(startingphase == true)
+        if (startingphase == true)
         {
             Debug.LogFormat("[Blinkstop #{0}] The module cannot be interacted with while the first sequence is flashing (to avoid bugs)!", moduleId);
         }
         else if (moduleSolved != true)
         {
             pressed.AddInteractionPunch(0.25f);
-            audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+            audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, pressed.transform);
             if(buttons[0] == pressed)
             {
                 numSequence += "3";
@@ -165,7 +162,7 @@ public class BlinkstopScript : MonoBehaviour {
         yellowct = 0;
         multict = 0;
         int[] possibles = { 30,33,37,39,42,44,47,51,55,59 };
-        int rando = UnityEngine.Random.Range(0, possibles.Length);
+        int rando = Random.Range(0, possibles.Length);
         ledcols = new char[possibles[rando]];
         while (multipleSmalls(new int[] { purplect, cyanct, yellowct, multict }))
         {
@@ -175,7 +172,7 @@ public class BlinkstopScript : MonoBehaviour {
             multict = 0;
             for (int i = 0; i < ledcols.Length; i++)
             {
-                int rando2 = UnityEngine.Random.Range(0, 4);
+                int rando2 = Random.Range(0, 4);
                 if (rando2 == 0)
                 {
                     ledcols[i] = 'P';
@@ -694,7 +691,6 @@ public class BlinkstopScript : MonoBehaviour {
         while (pausephase || startingphase)
         {
             yield return true;
-            yield return new WaitForSeconds(0.1f);
         }
         for (int i = 0; i < correctNumSequence.Length; i++)
         {
@@ -704,7 +700,6 @@ public class BlinkstopScript : MonoBehaviour {
                 while (pausephase)
                 {
                     yield return true;
-                    yield return new WaitForSeconds(0.1f);
                 }
                 i = 0;
             }
